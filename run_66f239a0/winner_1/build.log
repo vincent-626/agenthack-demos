@@ -1,0 +1,29 @@
+**StuckPoint** is built and ready. Here's what was created:
+
+```
+demo/
+├── app.py           # Flask backend + Claude API integration
+├── database.py      # SQLite schema, helpers, seed data
+├── requirements.txt # flask, anthropic, python-dotenv
+├── README.md        # Setup and walkthrough
+├── stuckpoint.db    # Pre-initialized DB with 3 topics
+├── templates/
+│   ├── index.html   # Home page with topic picker + progress sidebar
+│   ├── topic.html   # Workspace with stuck detection + chat panel
+│   └── instructor.html  # Dashboard at /instructor
+└── static/
+    ├── style.css    # Full design system
+    └── app.js       # Inactivity timer, keyword detection, chat, instructor UI
+```
+
+**To run:**
+```bash
+export ANTHROPIC_API_KEY=your_key
+python app.py
+# → http://localhost:5000
+```
+
+All 3 MVP features are implemented:
+1. **Proactive stuck detection** — 45s inactivity timer + keyword matching auto-opens chat, AI sends first message
+2. **Cross-session memory** — localStorage UUID, progress sidebar, session replay, prior context injection
+3. **Instructor dashboard** — `/instructor` (password: `instructor2024`), urgency colors, transcript viewer, send encouragement button with 60s auto-refresh

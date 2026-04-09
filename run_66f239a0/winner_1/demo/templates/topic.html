@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ topic.name }} — StuckPoint</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body class="topic-page">
+
+<!-- Onboarding Modal (if returning without UUID) -->
+<div id="onboarding-overlay" class="overlay hidden">
+  <div class="modal">
+    <div class="modal-logo">📍</div>
+    <h2>Welcome to StuckPoint</h2>
+    <p class="modal-subtitle">Your AI tutor that comes to you — before you get too stuck.</p>
+    <form id="onboarding-form">
+      <div class="form-group">
+        <label for="student-name">Your name</label>
+        <input type="text" id="student-name" placeholder="e.g. Alex Chen" required />
+      </div>
+      <div class="form-group">
+        <label for="student-email">Email</label>
+        <input type="email" id="student-email" placeholder="alex@example.com" required />
+      </div>
+      <button type="submit" class="btn-primary btn-full">Start Learning →</button>
+    </form>
+  </div>
+</div>
+
+<!-- Main layout with sidebar -->
+<div class="app-layout">
+
+  <!-- Left Sidebar: Progress -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <a href="/" class="logo">📍 StuckPoint</a>
+    </div>
+    <div class="sidebar-student" id="sidebar-student">
+      <div class="student-avatar" id="sidebar-avatar">?</div>
+      <div class="student-info">
+        <div class="student-name" id="sidebar-name">Loading...</div>
+        <div class="student-email" id="sidebar-email"></div>
+      </div>
+    </div>
+
+    <div class="sidebar-section-title">My Progress</div>
+    <div id="progress-list" class="progress-list">
+      <div class="empty-state">No sessions yet.</div>
+    </div>
+
+    <div class="sidebar-footer">
+      <button class="btn-ghost btn-sm" onclick="clearHistory()">Clear my history</button>
+      <a href="/instructor" class="btn-ghost btn-sm">Instructor →</a>
+    </div>
+  </aside>
+
+  <!-- Topic Workspace -->
+  <main class="topic-workspace" id="topic-workspace">
+    <div class="topic-header">
+      <a href="/" class="back-link">← All Topics</a>
+      <h2 id="topic-title">{{ topic.name }}</h2>
+      <div class="concept-tags">
+        {% for tag in topic.concept_tags %}
+        <span class="tag">{{ tag }}</span>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="workspace-body">
+      <!-- Problem Statement -->
+      <div class="problem-card">
+        <div class="problem-label">Problem</div>
+        <pre class="problem-text">{{ topic.problem_statement }}</pre>
+      </div>
+
+      <!-- Scratchpad -->
+      <div class="scratchpad-section">
+        <div class="scratchpad-label">
+          Your Scratchpad
+          <span class="inactivity-hint" id="inactivity-hint"></span>
+        </div>
+        <textarea
+          id="scratchpad"
+          class="scratchpad"
+          placeholder="Start typing your solution here… (StuckPoint will check in if you get stuck)"
+          rows="12"
+        ></textarea>
+        <div class="scratchpad-actions">
+          <button class="btn-secondary" id="submit-btn" onclick="checkForStuck()">
+            Submit / Check In
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Chat Panel (slides in from right) -->
+  <div class="chat-panel" id="chat-panel">
+    <div class="chat-header">
+      <div class="chat-ai-badge">
+        <span class="ai-dot"></span> StuckPoint AI
+      </div>
+      <button class="btn-icon" onclick="closeChat()" title="Close">✕</button>
+    </div>
+
+    <!-- Encouragement banner (instructor message) -->
+    <div id="encouragement-banner" class="encouragement-banner hidden">
+      <div class="enc-icon">💬</div>
+      <div id="encouragement-text"></div>
+    </div>
+
+    <div class="chat-messages" id="chat-messages"></div>
+
+    <div class="chat-input-area" id="chat-input-area">
+      <textarea
+        id="chat-input"
+        class="chat-input"
+        placeholder="Type your response…"
+        rows="2"
+        onkeydown="handleChatKey(event)"
+      ></textarea>
+      <button class="btn-primary btn-send" onclick="sendChatMessage()">Send</button>
+    </div>
+
+    <div id="try-again-area" class="try-again-area hidden">
+      <p class="try-again-msg">Great work! Ready to try the problem again?</p>
+      <button class="btn-primary btn-full" onclick="tryAgain()">Try the Problem Again →</button>
+    </div>
+  </div>
+</div>
+
+<!-- Session Replay Modal -->
+<div id="replay-overlay" class="overlay hidden">
+  <div class="modal modal-wide">
+    <div class="modal-header">
+      <h3 id="replay-title">Session Replay</h3>
+      <button class="btn-icon" onclick="closeReplay()">✕</button>
+    </div>
+    <div id="replay-transcript" class="transcript-view"></div>
+  </div>
+</div>
+
+<script>
+  const TOPIC_ID = "{{ topic.id }}";
+  const TOPIC_NAME = "{{ topic.name }}";
+</script>
+<script src="/static/app.js"></script>
+<script>
+  initTopicPage(TOPIC_ID, TOPIC_NAME);
+</script>
+</body>
+</html>

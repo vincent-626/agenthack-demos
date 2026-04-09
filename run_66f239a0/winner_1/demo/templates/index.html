@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StuckPoint — Proactive AI Tutoring</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body class="home-page">
+
+<!-- Onboarding Modal -->
+<div id="onboarding-overlay" class="overlay hidden">
+  <div class="modal">
+    <div class="modal-logo">📍</div>
+    <h2>Welcome to StuckPoint</h2>
+    <p class="modal-subtitle">Your AI tutor that comes to you — before you get too stuck.</p>
+    <form id="onboarding-form">
+      <div class="form-group">
+        <label for="student-name">Your name</label>
+        <input type="text" id="student-name" placeholder="e.g. Alex Chen" required />
+      </div>
+      <div class="form-group">
+        <label for="student-email">Email</label>
+        <input type="email" id="student-email" placeholder="alex@example.com" required />
+      </div>
+      <button type="submit" class="btn-primary btn-full">Start Learning →</button>
+    </form>
+  </div>
+</div>
+
+<!-- Main Layout -->
+<div class="app-layout">
+
+  <!-- Left Sidebar: Progress -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <span class="logo">📍 StuckPoint</span>
+    </div>
+    <div class="sidebar-student" id="sidebar-student">
+      <div class="student-avatar" id="sidebar-avatar">?</div>
+      <div class="student-info">
+        <div class="student-name" id="sidebar-name">Loading...</div>
+        <div class="student-email" id="sidebar-email"></div>
+      </div>
+    </div>
+
+    <div class="sidebar-section-title">My Progress</div>
+    <div id="progress-list" class="progress-list">
+      <div class="empty-state">No sessions yet.<br/>Pick a topic to start!</div>
+    </div>
+
+    <div class="sidebar-footer">
+      <button class="btn-ghost btn-sm" onclick="clearHistory()">Clear my history</button>
+      <a href="/instructor" class="btn-ghost btn-sm">Instructor →</a>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="page-header">
+      <h1>Choose a Topic</h1>
+      <p>Select a problem to work on. StuckPoint will be there if you get stuck.</p>
+    </div>
+
+    <div class="topics-grid">
+      {% for topic in topics %}
+      <a href="/topic/{{ topic.id }}" class="topic-card">
+        <div class="topic-icon">{{ loop.index }}</div>
+        <div class="topic-info">
+          <h3>{{ topic.name }}</h3>
+          <p>{{ topic.description[:100] }}…</p>
+          <div class="concept-tags">
+            {% for tag in topic.concept_tags[:3] %}
+            <span class="tag">{{ tag }}</span>
+            {% endfor %}
+          </div>
+        </div>
+        <span class="topic-arrow">→</span>
+      </a>
+      {% endfor %}
+    </div>
+  </main>
+</div>
+
+<!-- Session Replay Modal -->
+<div id="replay-overlay" class="overlay hidden">
+  <div class="modal modal-wide">
+    <div class="modal-header">
+      <h3 id="replay-title">Session Replay</h3>
+      <button class="btn-icon" onclick="closeReplay()">✕</button>
+    </div>
+    <div id="replay-transcript" class="transcript-view"></div>
+  </div>
+</div>
+
+<script src="/static/app.js"></script>
+<script>
+  initHomePage();
+</script>
+</body>
+</html>
