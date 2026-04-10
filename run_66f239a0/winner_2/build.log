@@ -1,0 +1,40 @@
+VulnLens is built and fully working. Here's what was created:
+
+## VulnLens — Complete
+
+**Structure:**
+```
+demo/
+├── backend/
+│   ├── main.py        # FastAPI app + all API routes
+│   ├── rules.py       # Deterministic rule engine (10 OWASP patterns)
+│   ├── database.py    # SQLite + 847-scan seed data
+│   └── requirements.txt
+├── frontend/
+│   ├── src/
+│   │   ├── pages/Scanner.jsx      # Split-screen editor + results
+│   │   ├── pages/Leaderboard.jsx  # Bar chart trends dashboard
+│   │   ├── pages/Report.jsx       # Shareable read-only report page
+│   │   └── components/            # CodeEditor, FindingCard, ScanHistory
+│   └── dist/                      # Built and ready to serve
+├── start.sh
+└── README.md
+```
+
+**To run:**
+```bash
+./start.sh
+# or manually:
+pip install -r backend/requirements.txt
+cd frontend && npm install && npm run build && cd ..
+python backend/main.py
+```
+Open http://localhost:8000
+
+**Verified working:**
+- Deterministic scan detects SQL injection, hardcoded secrets, MD5, XSS, eval(), etc.
+- API endpoints: `/api/scan`, `/api/report/:id`, `/api/history`, `/api/leaderboard`
+- React SPA with CodeMirror editor, red line highlighting, Recharts bar chart
+- Shareable reports at `/report/:id`, scan history sidebar, copy-as-Markdown export
+- Seeded with 847 historical scans for the leaderboard
+- AI review pass (Claude) enabled when `ANTHROPIC_API_KEY` is set; gracefully degrades without it
